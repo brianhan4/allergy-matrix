@@ -1,0 +1,9 @@
+#add-item-form {
+    display: flex;
+    flex-direction: column;
+    width:50vw;
+}
+
+#add-item-form > button {
+    max-width: 100px
+}

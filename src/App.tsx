@@ -1,11 +1,12 @@
-import React from 'react';
+import AddMenuItem from "./components/AddMenuItem";
+import MenuList from "./components/MenuList";
 
-function App() {
+export default function App() {
   return (
-    <>
-      <h1>Allergy Matrix App</h1>
-    </>
+    <div>
+      <h1>Allergy-Aware Menu</h1>
+      <AddMenuItem />
+      <MenuList />
+    </div>
   );
 }
-
-export default App;
