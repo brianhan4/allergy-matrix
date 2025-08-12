@@ -7,7 +7,7 @@ import type { MenuItem, MenuItemWithAllergies } from "../types";
 export default function MenuList() {
   // store derived items (base data + computed allergies)
   const [items, setItems] = useState<MenuItemWithAllergies[]>([]);
-  const [selectedAllergy, setSelectedAllergy] = useState<string>("");
+  const [selectedAllergies, setselectedAllergies] = useState<string[]>([]);
 
   useEffect(() => {
     const q = query(collection(db, "menuItems"), orderBy("createdAt", "desc"));
@@ -35,8 +35,10 @@ export default function MenuList() {
   }
 
   const filtered = items.filter((item) => {
-    if (!selectedAllergy) return true;
-    return !(item.detectedAllergies || []).includes(selectedAllergy);
+    if (!selectedAllergies) return true;
+    return !selectedAllergies.some((allergy) =>
+    (item.detectedAllergies || []).includes(allergy)
+  )
   });
 
   return (
@@ -44,20 +46,29 @@ export default function MenuList() {
       <h2>Menu</h2>
 
       <div>
-        <label htmlFor="filter">Filter by allergy: </label>
-        <select
-          id="filter"
-          value={selectedAllergy}
-          onChange={(e) => setSelectedAllergy(e.target.value)}
-        >
-          <option value="">No filter</option>
           {ALLERGENS.map((a) => (
-            <option key={a} value={a}>
-              {a}
-            </option>
+            <button
+              key={a}
+              type="button"
+              onClick={() =>
+                setselectedAllergies((prev) =>
+                  prev.includes(a)
+                    ? prev.filter((al) => al !== a)
+                    : [...prev, a]
+                )
+              }
+            >
+              {a} {selectedAllergies.includes(a) ? "✓" : ""}
+            </button>
           ))}
-        </select>
-      </div>
+          <button
+            type="button"
+            onClick={() => setselectedAllergies([])}
+            disabled={selectedAllergies.length === 0}
+          >
+            No filter
+          </button>
+        </div>
 
       <ul>
         {filtered.map((it) => (
